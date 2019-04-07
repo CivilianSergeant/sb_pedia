@@ -55,26 +55,32 @@ class EventListState extends State<EventList>{
   Widget build(BuildContext context) {
     var appTitleBar = AppTitleBar(title: 'All Event List', backgroundColor: ColorList.greenColor);
 
-    return Scaffold(
-      appBar: appTitleBar.build(),
-      drawer: NavigationDrawer(color:ColorList.greenColor,accentColor:ColorList.greenAccentColor,),
-      body: RefreshIndicator(
-        key: _refreshIndicatorKey,
-        child: ListView.builder(
-          itemCount: itemCount,
-          itemBuilder: renderItems,
-        ),
-        onRefresh: (){
-          return EventService.getEvents().then( (dynamic lists) {
-            if(lists != null) {
-              setState(() {
-                itemCount = lists.length;
-                events = lists;
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context);
+        Navigator.pushNamed(context, "/home");
+      },
+      child: Scaffold(
+          appBar: appTitleBar.build(),
+          drawer: NavigationDrawer(color:ColorList.greenColor,accentColor:ColorList.greenAccentColor,),
+          body: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            child: ListView.builder(
+              itemCount: itemCount,
+              itemBuilder: renderItems,
+            ),
+            onRefresh: (){
+              return EventService.getEvents().then( (dynamic lists) {
+                if(lists != null) {
+                  setState(() {
+                    itemCount = lists.length;
+                    events = lists;
+                  });
+                }
               });
-            }
-          });
-        },
-      )
+            },
+          )
+      ),
     );
   }
 }
