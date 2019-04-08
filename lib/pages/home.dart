@@ -2,15 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_demo/app_bar/app_bar.dart';
 import 'package:flutter_demo/colors/color_list.dart';
 import 'package:flutter_demo/grid_view/grid_item.dart';
 import 'package:flutter_demo/navigation_drawer/navigation_drawer.dart';
 import 'package:flutter_demo/icons/my_flutter_icons.dart';
-
-
-
 
 class HomePage extends StatelessWidget{
 
@@ -27,46 +24,29 @@ class HomePageWidget extends StatefulWidget{
   HomePageWidgetState createState() => new HomePageWidgetState();
 }
 
-class HomePageWidgetState extends State<HomePageWidget> with WidgetsBindingObserver  {
+class HomePageWidgetState extends State<HomePageWidget>{
 
   Color greenColor = ColorList.greenColor;
   Color greenAccentColor = ColorList.greenAccentColor;
   AppLifecycleState state;
+  var androidMessageChannel = MethodChannel("android_app_retain");
   static int backButtonState = 0;
+
   void triggerAction (BuildContext context,String actionName){
 
     switch(actionName){
       case "events":
 
-        Navigator.of(context).pushNamed('/events');
+        Navigator.pushReplacementNamed(context, '/events');
         break;
       default:
         break;
     }
   }
 
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-
-  @override
-  void dispose() {
-    print(state);
-    WidgetsBinding.instance.addObserver(this);
-    super.dispose();
-  }
-
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      this.state = state;
-    });
-    print(state);
   }
 
   Future<bool> _exitApp(BuildContext context) {
@@ -96,7 +76,19 @@ class HomePageWidgetState extends State<HomePageWidget> with WidgetsBindingObser
   Widget build(BuildContext context) {
     var appTitleBar = AppTitleBar(backgroundColor: ColorList.greenColor);
 
-    return  Scaffold(
+    return  WillPopScope(
+      onWillPop: () async {
+        if(Navigator.canPop(context)){
+          return Future.value(true);
+        }else{
+          if (Platform.isAndroid) {
+            androidMessageChannel.invokeMethod("sendAppToBackground");
+          }else{
+            _exitApp(context);
+          }
+        }
+      },
+      child: Scaffold(
         key: Key("home"),
         appBar: appTitleBar.build(),
         drawer: NavigationDrawer(color: greenColor,accentColor: greenAccentColor,imagePath: IMAGE_URL,),
@@ -116,6 +108,7 @@ class HomePageWidgetState extends State<HomePageWidget> with WidgetsBindingObser
           ],
         ),
 
+      ),
     );
   }
 }

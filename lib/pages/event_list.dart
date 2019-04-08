@@ -27,16 +27,19 @@ class EventListState extends State<EventList>{
   dynamic events;
   int itemCount = 0;
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey;
-
+  bool onLoadFlag = false;
 
   @override
   void initState() {
     super.initState();
+    onLoadFlag = false;
     _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
     Future.delayed(Duration(milliseconds: 200)).then((_) {
       _refreshIndicatorKey.currentState?.show();
     });
   }
+
+
 
   Widget renderItems(BuildContext context, int i) {
     if(events != null) {
@@ -57,8 +60,8 @@ class EventListState extends State<EventList>{
 
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(context);
-        Navigator.pushNamed(context, "/home");
+
+        Navigator.pushReplacementNamed(context, "/home");
       },
       child: Scaffold(
           appBar: appTitleBar.build(),
@@ -69,19 +72,40 @@ class EventListState extends State<EventList>{
               itemCount: itemCount,
               itemBuilder: renderItems,
             ),
-            onRefresh: (){
-              return EventService.getEvents().then( (dynamic lists) {
+            onRefresh: () async {
+
+              if(!onLoadFlag){
+                onLoadFlag=true;
+                return EventService.events().then((dynamic lists){
+                  if(lists != null) {
+                    setState(() {
+                      itemCount = lists.length;
+                      events = lists;
+
+                    });
+                  }
+                });
+
+              } else {
+                return EventService.getEventsFromApi().then( (dynamic lists) {
                 if(lists != null) {
+                  for(var i=0;i<lists.length; i++){
+                    Event event = lists[i];
+                    EventService.addEvent(event);
+                  }
                   setState(() {
                     itemCount = lists.length;
                     events = lists;
                   });
                 }
               });
+              }
             },
           )
       ),
     );
   }
+
+
 }
 

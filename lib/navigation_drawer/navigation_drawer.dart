@@ -19,8 +19,7 @@ class NavigationDrawer extends StatelessWidget{
       switch(actionName){
         case "events":
           if(route.settings.name != "/events"){
-
-            Navigator.popAndPushNamed(context,'/events');
+            Navigator.pushReplacementNamed(context,'/events');
           }else{
             Navigator.pop(context);
           }

@@ -26,7 +26,7 @@ class NavDrawerHeader extends StatelessWidget{
 
                   Navigator.popUntil(context, (route){
                     if(route.settings.name != "/home"){
-                      Navigator.popAndPushNamed(context,'/home');
+                      Navigator.pushReplacementNamed(context,'/home');
                     }else{
                       Navigator.pop(context);
                     }

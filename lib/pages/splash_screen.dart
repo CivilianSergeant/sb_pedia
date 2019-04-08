@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/colors/color_list.dart';
+import 'package:flutter_demo/entities/event.dart';
+import 'package:flutter_demo/services/event_service.dart';
 
 class SplashScreen extends StatefulWidget{
   @override
@@ -14,6 +16,17 @@ class SplashScreenState extends State<SplashScreen>{
 
   startTime() async {
     var _duration = new Duration(seconds: 3);
+    dynamic events = await EventService.events();
+    if(events == null || events.length == 0) {
+      EventService.getEventsFromApi().then((dynamic lists) {
+        if (lists != null) {
+          lists.forEach((Event element) =>
+            EventService.addEvent(element)
+          );
+        }
+
+      });
+    }
     return new Timer(_duration, navigationPage);
   }
 

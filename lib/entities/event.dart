@@ -46,4 +46,16 @@ class Event {
       photo: json['photo']
     );
   }
+
+  Map<String,dynamic> toMap(){
+    return {
+      'id' : id,
+      'title' : title,
+      'start_date' : startDate,
+      'start_time' : startTime,
+      'end_date' : endDate,
+      'end_time' : endTime,
+      'venue': venue
+    };
+  }
 }
