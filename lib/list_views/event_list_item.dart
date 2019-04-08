@@ -33,7 +33,7 @@ class EventListItem extends StatelessWidget{
                         children: <Widget>[
                           Padding(padding: EdgeInsets.only(top: 5),child:Text("Venue: "+venue),),
                           Padding(padding: EdgeInsets.only(top: 5),child:Text("Start: "+start),),
-                          Padding(padding: EdgeInsets.only(top: 5),child:Text("Start: "+end),),
+                          Padding(padding: EdgeInsets.only(top: 5),child:Text("End: "+end),),
                         ],
                       )
                   ),
