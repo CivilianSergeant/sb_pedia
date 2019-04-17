@@ -1,4 +1,3 @@
-import 'package:flutter_demo/entities/event.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -23,13 +22,50 @@ class DbProvider{
         },
         onCreate: (Database db, int version) async {
         await db.execute("CREATE TABLE events ("
-          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "id INT PRIMARY KEY,"
           "title TEXT,"
-          "start_date TEXT,"
-          "start_time TEXT,"
-          "end_date TEXT,"
-          "end_time TEXT,"
-          "venue Text"
+          "venue Text,"
+          "start_date VARCHAR(10),"
+          "start_time VARCHAR(10),"
+          "end_date VARCHAR(10),"
+          "end_time VARCHAR(10),"
+          "event_code VARCHAR(50),"
+          "event_schedule_id INT,"
+          "city VARCHAR(50),"
+          "image TEXT,"
+          "content_url TEXT,"
+          "type VARCHAR(20)"
+          ")");
+        await db.execute("CREATE TABLE news ("
+          "id INT PRIMARY KEY,"
+          "title TEXT,"
+          "is_top_news TINYINT(1),"
+          "approved_status VARCHAR(20),"
+          "publish_date VARCHAR(10),"
+          "image TEXT,"
+          "type VARCHAR(20),"
+          "description Text,"
+          "content_url Text"
+          ")");
+        await db.execute("CREATE TABLE notifications ("
+          "id INT PRIMARY KEY,"
+          "title TEXT,"
+          "message TEXT,"
+          "is_top TINYINT(1),"
+          "url TEXT,"
+          "image_url TEXT,"
+          "sent_date VARCHAR(10)"
+          ")");
+        await db.execute("CREATE TABLE settings ("
+          "id INT PRIMARY KEY,"
+          "title VARCHAR(50),"
+          "status TINYINT(1)"
+          ")");
+        await db.execute("CREATE TABLE users ("
+          "id INT PRIMARY KEY,"
+          "username VARCHAR(100),"
+          "password VARCHAR(100),"
+          "user_type VARCHAR(10)"
           ")");
     });
   }

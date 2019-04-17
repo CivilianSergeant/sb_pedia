@@ -16,7 +16,7 @@ class SplashScreenState extends State<SplashScreen>{
 
   startTime() async {
     var _duration = new Duration(seconds: 3);
-    dynamic events = await EventService.events();
+    dynamic events = await EventService.getEvents();
     if(events == null || events.length == 0) {
       EventService.getEventsFromApi().then((dynamic lists) {
         if (lists != null) {
@@ -24,7 +24,6 @@ class SplashScreenState extends State<SplashScreen>{
             EventService.addEvent(element)
           );
         }
-
       });
     }
     return new Timer(_duration, navigationPage);

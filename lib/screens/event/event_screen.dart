@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/app_bar/app_bar.dart';
-import 'package:flutter_demo/colors/color_list.dart';
-import 'package:flutter_demo/entities/event.dart';
-import 'package:flutter_demo/list_views/event_list_item.dart';
-import 'package:flutter_demo/navigation_drawer/navigation_drawer.dart';
-import 'package:flutter_demo/services/event_service.dart';
+import 'package:social_business/widgets/app_bar/app_bar.dart';
+import 'package:social_business/widgets/colors/color_list.dart';
+import 'package:social_business/entities/event.dart';
+import 'package:social_business/widgets/list_views/event_list_item.dart';
+import 'package:social_business/widgets/navigation_drawer/navigation_drawer.dart';
+import 'package:social_business/services/event_service.dart';
 
-class Events extends StatelessWidget{
+class EventScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +43,8 @@ class EventListState extends State<EventList>{
 
   Widget renderItems(BuildContext context, int i) {
     if(events != null) {
-
       Event event = events[i];
-      return EventListItem(
-        title: event.title,
-        start: ((event.startDate != null) ? event.startDate : "N/A"),
-        end: ((event.endDate != null) ? event.endDate : "N/A"),
-        venue: ((event.venue != null) ? event.venue : "N/A"),
-      );
+      return EventListItem(event: event);
     }
   }
 
@@ -59,7 +53,7 @@ class EventListState extends State<EventList>{
     var appTitleBar = AppTitleBar(title: 'All Event List', backgroundColor: ColorList.greenColor);
 
     return WillPopScope(
-      onWillPop: () async {
+      onWillPop: (){
 
         Navigator.pushReplacementNamed(context, "/home");
       },
@@ -68,9 +62,14 @@ class EventListState extends State<EventList>{
         drawer: NavigationDrawer(color:ColorList.greenColor,accentColor:ColorList.greenAccentColor,),
         body: RefreshIndicator(
           key: _refreshIndicatorKey,
-          child: ListView.builder(
-            itemCount: itemCount,
-            itemBuilder: renderItems,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white
+            ),
+            child: ListView.builder(
+              itemCount: itemCount,
+              itemBuilder: renderItems,
+            ),
           ),
           onRefresh: () async {
 
@@ -87,18 +86,18 @@ class EventListState extends State<EventList>{
               });
 
             } else {
-              return EventService.getEventsFromApi().then( (dynamic lists) {
-              if(lists != null) {
-                for(var i=0;i<lists.length; i++){
-                  Event event = lists[i];
-                  EventService.addEvent(event);
-                }
-                setState(() {
-                  itemCount = lists.length;
-                  events = lists;
-                });
-              }
-            });
+//              return EventService.getEventsFromApi().then( (dynamic lists) {
+//              if(lists != null) {
+//                for(var i=0;i<lists.length; i++){
+//                  Event event = lists[i];
+//                  EventService.addEvent(event);
+//                }
+//                setState(() {
+//                  itemCount = lists.length;
+//                  events = lists;
+//                });
+//              }
+//            });
             }
           },
         )

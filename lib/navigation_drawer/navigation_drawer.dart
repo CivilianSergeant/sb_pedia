@@ -24,6 +24,13 @@ class NavigationDrawer extends StatelessWidget{
             Navigator.pop(context);
           }
           break;
+        case "news":
+          if(route.settings.name != "/news"){
+            Navigator.pushReplacementNamed(context, '/news');
+          }else{
+            Navigator.pop(context);
+          }
+          break;
       }
       return true;
     });
@@ -38,7 +45,8 @@ class NavigationDrawer extends StatelessWidget{
           children: <Widget>[
             SizedBox(
                   height:225,
-                  child: NavDrawerHeader(color: accentColor, imagePath: imagePath,)
+                  child: NavDrawerHeader(color: accentColor,
+                    imagePath: imagePath,)
             ),
             Expanded(
               child: Material(
@@ -46,17 +54,50 @@ class NavigationDrawer extends StatelessWidget{
                 child: ListView(
                   padding: EdgeInsets.all(0),
                   children: <Widget>[
-                    ListItem( name: 'acount-info', icon: Icons.info,iconColor: accentColor,text: "Account Information",textColor: accentColor),
-                    ListItem(icon: Icons.lock,iconColor: accentColor,text: "Forget Password",textColor: accentColor),
+                    ListItem( name: 'acount-info',
+                        icon: Icons.info,
+                        iconColor: accentColor,
+                        text: "Account Information",
+                        textColor: accentColor),
+                    ListItem(icon: Icons.lock,
+                        iconColor: accentColor,
+                        text: "Forget Password",
+                        textColor: accentColor),
                     Divider(),
-                    Padding(padding:EdgeInsets.only(left: 20,top:4),child:Text("All Modules",style: TextStyle(color: accentColor))),
-                    ListItem(callback:this.triggerAction, name:'events', icon: MyFlutter.calendar,iconColor: accentColor,text: "SB Events",textColor: accentColor),
-                    ListItem(icon: MyFlutter.chart_line,iconColor: accentColor,text: "SB Design Lab",textColor: accentColor),
-                    ListItem(icon: Icons.public,iconColor: accentColor,text: "SB World",textColor: accentColor),
-                    ListItem(icon: Icons.school,iconColor: accentColor,text: "SB Academia",textColor: accentColor),
-                    ListItem(icon: MyFlutter.newspaper,iconColor: accentColor,text: "SB News/Media",textColor: accentColor),
-                    ListItem(icon: MyFlutter.wikipedia_w,iconColor: accentColor,text: "SB Wiki",textColor: accentColor),
-                    ListItem(icon: MyFlutter.youtube_play,iconColor: accentColor,text: "SB Videos",textColor: accentColor),
+                    Padding(padding:EdgeInsets.only(left: 20,top:4),
+                      child:Text("All Modules",
+                      style: TextStyle(color: accentColor)
+                      )
+                    ),
+                    ListItem(callback:this.triggerAction, name:'events',
+                        icon: MyFlutter.calendar,
+                        iconColor: accentColor,text: "SB Events",
+                        textColor: accentColor),
+                    ListItem(icon: MyFlutter.chart_line,
+                        iconColor: accentColor,text: "SB Design Lab",
+                        textColor: accentColor),
+                    ListItem(icon: Icons.public,
+                        iconColor: accentColor,
+                        text: "SB World",
+                        textColor: accentColor),
+                    ListItem(icon: Icons.school,
+                        iconColor: accentColor,
+                        text: "SB Academia",
+                        textColor: accentColor),
+                    ListItem(callback:this.triggerAction,
+                        name:'news',
+                        icon: MyFlutter.newspaper,
+                        iconColor: accentColor,
+                        text: "SB News/Media",
+                        textColor: accentColor),
+                    ListItem(icon: MyFlutter.wikipedia_w,
+                        iconColor: accentColor,
+                        text: "SB Wiki",
+                        textColor: accentColor),
+                    ListItem(icon: MyFlutter.youtube_play,
+                        iconColor: accentColor,
+                        text: "SB Videos",
+                        textColor: accentColor),
                   ],
                 ),
               ),

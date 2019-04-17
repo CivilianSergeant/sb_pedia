@@ -36,8 +36,10 @@ class HomePageWidgetState extends State<HomePageWidget>{
 
     switch(actionName){
       case "events":
-
         Navigator.pushReplacementNamed(context, '/events');
+        break;
+      case "news":
+        Navigator.pushReplacementNamed(context, '/news');
         break;
       default:
         break;
@@ -90,7 +92,7 @@ class HomePageWidgetState extends State<HomePageWidget>{
       },
       child: Scaffold(
         key: Key("home"),
-        appBar: appTitleBar.build(),
+        appBar: appTitleBar.build(state: widget),
         drawer: NavigationDrawer(color: greenColor,accentColor: greenAccentColor,imagePath: IMAGE_URL,),
         body: GridView.count(
           crossAxisCount: 3,
@@ -100,7 +102,7 @@ class HomePageWidgetState extends State<HomePageWidget>{
             GridItem(color: greenAccentColor, text:"SBAC", icon: MyFlutter.chart_line,),
             GridItem(color: greenAccentColor, text:"SB World", icon: Icons.public,),
             GridItem(color: greenAccentColor, text:"SB Design Lab", icon:MyFlutter.chart_pie),
-            GridItem(color: greenAccentColor, text:"SB News", icon:MyFlutter.newspaper),
+            GridItem(callback:this.triggerAction, name: 'news', color: greenAccentColor, text:"SB News", icon:MyFlutter.newspaper),
             GridItem(color: greenAccentColor, text:"SB Academia", icon:Icons.school),
             GridItem(color: greenAccentColor, text:"SB Wiki", icon:MyFlutter.wikipedia_w),
             GridItem(color: greenAccentColor, text:"SB Videos", icon:MyFlutter.youtube_play),

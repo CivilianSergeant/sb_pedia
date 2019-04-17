@@ -1,49 +1,53 @@
 class Event {
 
+  static const String table = "events";
+
   final int id;
+  final String title;
+  final String venue;
   final String startDate;
   final String startTime;
   final String endDate;
   final String endTime;
-  final String eventId;
-  final String title;
   final String eventCode;
-  final String venue;
-  final String city;
-  final String bannerImage;
-  final String status;
   final String eventScheduleId;
-  final bool description;
-  final int orderId;
   final String contentUrl;
+  final String city;
+  final String image;
   final String type;
-  final String photo;
 
-  Event({this.id,this.startDate,this.startTime,this.endDate,this.endTime,
-  this.eventId,this.title,this.eventCode,this.venue,this.city,this.bannerImage,
-  this.status,this.eventScheduleId,this.description,this.orderId,
-  this.contentUrl,this.type,this.photo});
+  Event({
+    this.id,
+    this.title,
+    this.venue,
+    this.startDate,
+    this.startTime,
+    this.endDate,
+    this.endTime,
+    this.city,
+    this.image,
+    this.type,
+    this.eventCode,
+    this.eventScheduleId,
+    this.contentUrl
+  });
 
   factory Event.fromJson(Map<String, dynamic> json) {
+
     return Event(
       id: int.parse(json['id']),
+      title: json['title'],
+      venue: json['venue'],
       startDate: json['start_date'],
       startTime: json['start_time'],
       endDate: json['end_date'],
       endTime: json['end_time'],
-      eventId: json['eventid'],
-      title: json['title'],
-      eventCode: json['event_code'],
-      venue: json['venue'],
       city: json['city'],
-      bannerImage: json['banner_image'],
-      status: json['status'],
-      eventScheduleId: json['event_schedule_id'],
-      description: false,
-      orderId: 0,
-      contentUrl: json['content_url'],
+      image: json['image'],
       type: json['type'],
-      photo: json['photo']
+      eventCode: json['event_code'],
+      eventScheduleId: json['event_schedule_id'],
+      contentUrl: json['content_url']
     );
   }
 
@@ -51,11 +55,17 @@ class Event {
     return {
       'id' : id,
       'title' : title,
+      'venue': venue,
       'start_date' : startDate,
       'start_time' : startTime,
       'end_date' : endDate,
       'end_time' : endTime,
-      'venue': venue
+      'event_code' : eventCode,
+      'event_schedule_id' : eventScheduleId,
+      'content_url' : contentUrl,
+      'city' : city,
+      'image' : image,
+      'type' : type
     };
   }
 }
