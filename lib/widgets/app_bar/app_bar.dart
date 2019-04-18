@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:social_business/services/network_service.dart';
+import 'package:social_business/services/settings_service.dart';
+import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppTitleBar{
 
   Color backgroundColor;
   String title;
-  AppTitleBar({Key key,this.title="Social Business Pedia",this.backgroundColor});
+  PreferredSizeWidget preferredSizeWidget;
+  AppTitleBar({Key key,this.title="Social Business Pedia",this.backgroundColor, this.preferredSizeWidget});
   List<PopupMenuOption> options = <PopupMenuOption>[
     PopupMenuOption(title: "Refresh to update",name: 'rtu'),
     PopupMenuOption(title: "Help",name:'help'),
@@ -15,11 +19,12 @@ class AppTitleBar{
     PopupMenuOption(title: "yunuscentre.org",name: 'weblink')
   ];
 
-  PreferredSizeWidget build() {
+  PreferredSizeWidget build(BuildContext context) {
     return AppBar(
       backgroundColor: backgroundColor,
       title: Text(title),
       centerTitle: true,
+      bottom: preferredSizeWidget,
       actions: <Widget>[
         PopupMenuButton<PopupMenuOption>(
           itemBuilder: (BuildContext context){
@@ -30,18 +35,35 @@ class AppTitleBar{
               );
             }).toList();
           },
-          onSelected: (PopupMenuOption option) async {
+          onSelected: (PopupMenuOption option) {
             switch(option.name){
               case 'rtu':
+                Toast.show("Refreshing ... ",context,duration: Toast.LENGTH_SHORT,gravity:Toast.CENTER);
+                String url = "http://sbes.socialbusinesspedia.com/api/sb_contents/content";
+                NetworkService.fetch(url).then((Map<String,dynamic> parsedJson){
+                  if(parsedJson==null){
+                    Toast.show("Internet not available",context,duration: Toast.LENGTH_LONG,gravity:Toast.CENTER);
+                  }
+                  SettingsService.refreshAndLoadData(parsedJson);
+                });
+
                 break;
               case 'help':
+                Navigator.of(context).pushNamed('/help');
                 break;
               case 'rta':
                 break;
               case 'sf':
                 break;
               case 'weblink':
-                await launch('http://'+option.title);
+                NetworkService.check().then((bool network) async {
+                  if(network){
+                    await launch('http://'+option.title);
+                  }else{
+                    Toast.show("Internet not available",context,duration: Toast.LENGTH_LONG,gravity:Toast.CENTER);
+                  }
+                });
+
                 break;
             }
           },

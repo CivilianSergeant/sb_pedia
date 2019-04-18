@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_business/services/network_service.dart';
 import 'package:social_business/widgets/app_bar/app_bar.dart';
 import 'package:social_business/widgets/colors/color_list.dart';
 import 'package:social_business/entities/event.dart';
@@ -58,7 +59,7 @@ class EventListState extends State<EventList>{
         Navigator.pushReplacementNamed(context, "/home");
       },
       child: Scaffold(
-        appBar: appTitleBar.build(),
+        appBar: appTitleBar.build(context),
         drawer: NavigationDrawer(color:ColorList.greenColor,accentColor:ColorList.greenAccentColor,),
         body: RefreshIndicator(
           key: _refreshIndicatorKey,
@@ -75,30 +76,23 @@ class EventListState extends State<EventList>{
 
             if(!onLoadFlag){
               onLoadFlag=true;
-              return EventService.getEvents().then((dynamic lists){
-                if(lists != null) {
-                  setState(() {
-                    itemCount = lists.length;
-                    events = lists;
-
-                  });
-                }
-              });
-
             } else {
-//              return EventService.getEventsFromApi().then( (dynamic lists) {
-//              if(lists != null) {
-//                for(var i=0;i<lists.length; i++){
-//                  Event event = lists[i];
-//                  EventService.addEvent(event);
-//                }
-//                setState(() {
-//                  itemCount = lists.length;
-//                  events = lists;
-//                });
-//              }
-//            });
+              String url = "http://sbes.socialbusinesspedia.com/api/sb_contents/content/event";
+              final parsedJson = await NetworkService.fetch(url);
+              List<Event> newEvents = EventService().extractFromJson(parsedJson);
+              if (newEvents != null) {
+                newEvents.forEach((Event event) => EventService.addEvent(event));
+              }
             }
+
+            return EventService.getEvents().then((dynamic lists){
+              if(lists != null) {
+                setState(() {
+                  itemCount = lists.length;
+                  events = lists;
+                });
+              }
+            });
           },
         )
       ),

@@ -24,7 +24,7 @@ class _EventDetailScreenState extends State<WebViewDetailScreen>{
   Widget build(BuildContext context) {
     var appBar = AppTitleBar(title: widget.title, backgroundColor: ColorList.greenColor);
     return Scaffold(
-      appBar: appBar.build(),
+      appBar: appBar.build(context),
       body: WebView(
         initialUrl: widget.url,
         javascriptMode: JavascriptMode.unrestricted,

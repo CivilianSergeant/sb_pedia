@@ -99,18 +99,18 @@ class _LoginScreenState extends State<LoginScreen>{
             Padding(
               padding: EdgeInsets.only(top:20,left:30,right: 30,bottom: 30),
               child: SizedBox(
-                  width: double.infinity,
-                  height: 40,
-                  child: RaisedButton(
-                    color: Colors.deepOrangeAccent,
-                    textColor: Colors.white,
-                    elevation: 4,
-                    child: const Text("Guest",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-                    onPressed: (){
-                      UserService.addUser(User(id: 1,userType: User.GUEST,username: "Guest User"));
-                      Navigator.pushReplacementNamed(context, "/home");
-                    },
-                  )
+                width: double.infinity,
+                height: 40,
+                child: RaisedButton(
+                  color: Colors.deepOrangeAccent,
+                  textColor: Colors.white,
+                  elevation: 4,
+                  child: const Text("Guest",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                  onPressed: (){
+                    UserService.addUser(User(id: 1,userType: User.GUEST,username: "Guest User"));
+                    Navigator.pushReplacementNamed(context, "/home");
+                  },
+                )
               ),
             )
           ],

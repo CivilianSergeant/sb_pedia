@@ -25,7 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
         Navigator.pushReplacementNamed(context, "/home");
       },
       child: Scaffold(
-        appBar: appTitleBar.build(),
+        appBar: appTitleBar.build(context),
         drawer: NavigationDrawer(color: ColorList.greenColor,accentColor: ColorList.greenAccentColor),
         body: Container(
           child: ListView.builder(

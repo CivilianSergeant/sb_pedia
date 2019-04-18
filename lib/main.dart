@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:social_business/screens/faq/faq_screen.dart';
+import 'package:social_business/screens/help_screen.dart';
 import 'package:social_business/screens/news/news_screen.dart';
 import 'package:social_business/screens/notification/notification_screen.dart';
 import 'package:social_business/screens/settings_screen.dart';
@@ -28,7 +30,9 @@ class MyApp extends StatelessWidget {
         '/events': (context) => EventScreen(),
         '/news'  : (context) => NewsScreen(),
         '/notifications' : (context) => NotificationScreen(),
-        '/settings': (context) => SettingsScreen()
+        '/settings': (context) => SettingsScreen(),
+        '/faqs' : (context) => FaqScreen(),
+        '/help' : (context) => HelpScreen()
       },
       debugShowCheckedModeBanner: false,
     );

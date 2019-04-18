@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_business/entities/news.dart';
+import 'package:social_business/services/network_service.dart';
 import 'package:social_business/services/news_service.dart';
 import 'package:social_business/widgets/app_bar/app_bar.dart';
 import 'package:social_business/widgets/colors/color_list.dart';
@@ -47,7 +48,7 @@ class _NewsScreenState extends State<NewsScreen>{
         Navigator.pushReplacementNamed(context, "/home");
       },
       child: Scaffold(
-        appBar: appTitleBar.build(),
+        appBar: appTitleBar.build(context),
         drawer: NavigationDrawer(color:ColorList.greenColor,accentColor:ColorList.greenAccentColor,),
         body: RefreshIndicator(
           key: _refreshIndicatorKey,
@@ -64,17 +65,23 @@ class _NewsScreenState extends State<NewsScreen>{
           onRefresh: () async{
             if(!onLoadFlag){
               onLoadFlag=true;
-              return NewsService.getNews().then((dynamic lists){
-                if(lists != null) {
-                  setState(() {
-                    itemCount = lists.length;
-                    allNews = lists;
-                  });
-                }
-              });
             }else{
-
+              String url = "http://sbes.socialbusinesspedia.com/api/sb_contents/content/news";
+              final parsedJson = await NetworkService.fetch(url);
+              List<News> newNews = NewsService().extractFromJson(parsedJson);
+              if (newNews != null) {
+                newNews.forEach((News n) => NewsService.addNews(n));
+              }
             }
+
+            return NewsService.getNews().then((dynamic lists){
+              if(lists != null) {
+                setState(() {
+                  itemCount = lists.length;
+                  allNews = lists;
+                });
+              }
+            });
           },
         ),
       ),

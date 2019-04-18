@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_business/entities/notification.dart' as SBNotification;
+import 'package:social_business/services/network_service.dart';
 import 'package:social_business/services/notification_service.dart';
 import 'package:social_business/widgets/app_bar/app_bar.dart';
 import 'package:social_business/widgets/colors/color_list.dart';
@@ -47,7 +48,7 @@ class _NotificationScreenState extends State<NotificationScreen>{
         Navigator.pushReplacementNamed(context, "/home");
       },
       child: Scaffold(
-        appBar: appTitleBar.build(),
+        appBar: appTitleBar.build(context),
         drawer: NavigationDrawer(color:ColorList.greenColor,accentColor:ColorList.greenAccentColor,),
         body: RefreshIndicator(
           key: _refreshIndicatorState,
@@ -58,20 +59,27 @@ class _NotificationScreenState extends State<NotificationScreen>{
               itemBuilder: renderItems
             ),
           ),
-          onRefresh: () {
+          onRefresh: () async {
             if(onLoadFlag == false){
               onLoadFlag = true;
-              return NotificationService.getNotifications().then((dynamic lists) {
-                if(lists != null){
-                  setState(() {
-                    itemCount = lists.length;
-                    notifications = lists;
-                  });
-                }
-              });
             }else{
-              return Future<Null>.value(null);
+              String url = "http://sbes.socialbusinesspedia.com/api/sb_contents/content/notification";
+              final parsedJson = await NetworkService.fetch(url);
+              List<SBNotification.Notification> newNotifications = NotificationService().extractFromJson(parsedJson);
+              if(newNotifications != null){
+                newNotifications.forEach((SBNotification.Notification n){
+                  NotificationService.addNotification(n);
+                });
+              }
             }
+            return NotificationService.getNotifications().then((dynamic lists) {
+              if(lists != null){
+                setState(() {
+                  itemCount = lists.length;
+                  notifications = lists;
+                });
+              }
+            });
           },
         )
       ),

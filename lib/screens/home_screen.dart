@@ -148,7 +148,7 @@ class HomePageWidgetState extends State<HomePageWidget>{
       },
       child: Scaffold(
         key: Key("home"),
-        appBar: appTitleBar.build(),
+        appBar: appTitleBar.build(context),
         drawer: NavigationDrawer(color: ColorList.greenColor,accentColor: ColorList.greenAccentColor,imagePath: IMAGE_URL,),
         body: Container(
           decoration: BoxDecoration(

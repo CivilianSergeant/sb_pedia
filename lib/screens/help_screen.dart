@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+import 'package:social_business/widgets/app_bar/app_bar.dart';
+import 'package:social_business/widgets/colors/color_list.dart';
+
+class HelpScreen extends StatefulWidget{
+
+  @override
+  State createState() {
+    return _HelpScreenState();
+  }
+}
+
+class _HelpScreenState extends State<HelpScreen>{
+
+  @override
+  Widget build(BuildContext context) {
+    final appTitleBar = AppTitleBar(title: "Help",backgroundColor: ColorList.greenColor);
+    return Scaffold(
+        appBar: appTitleBar.build(context),
+        body: Container(),
+    );
+  }
+}
