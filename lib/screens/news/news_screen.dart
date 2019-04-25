@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/entities/news.dart';
-import 'package:social_business/services/network_service.dart';
-import 'package:social_business/services/news_service.dart';
-import 'package:social_business/widgets/app_bar/app_bar.dart';
-import 'package:social_business/widgets/colors/color_list.dart';
-import 'package:social_business/widgets/list_views/news_list_item.dart';
-import 'package:social_business/widgets/navigation_drawer/navigation_drawer.dart';
+import 'package:sb_pedia/entities/news.dart';
+import 'package:sb_pedia/services/network_service.dart';
+import 'package:sb_pedia/services/news_service.dart';
+import 'package:sb_pedia/widgets/app_bar/app_bar.dart';
+import 'package:sb_pedia/widgets/colors/color_list.dart';
+import 'package:sb_pedia/widgets/list_views/news_list_item.dart';
+import 'package:sb_pedia/widgets/navigation_drawer/navigation_drawer.dart';
 
 class NewsScreen extends StatefulWidget{
 

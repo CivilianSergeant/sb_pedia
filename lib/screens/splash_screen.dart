@@ -1,18 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:social_business/entities/event.dart';
-import 'package:social_business/entities/news.dart';
-import 'package:social_business/entities/notification.dart' as SBNotification;
-import 'package:social_business/entities/setting.dart';
-import 'package:social_business/entities/user.dart';
-import 'package:social_business/services/event_service.dart';
-import 'package:social_business/services/network_service.dart';
-import 'package:social_business/services/news_service.dart';
-import 'package:social_business/services/notification_service.dart';
-import 'package:social_business/services/settings_service.dart';
-import 'package:social_business/services/user_service.dart';
-import 'package:social_business/widgets/colors/color_list.dart';
+import 'package:sb_pedia/entities/user.dart';
+import 'package:sb_pedia/services/network_service.dart';
+import 'package:sb_pedia/services/settings_service.dart';
+import 'package:sb_pedia/services/user_service.dart';
+import 'package:sb_pedia/widgets/colors/color_list.dart';
 import 'package:toast/toast.dart';
 
 class SplashScreen extends StatefulWidget{
@@ -81,7 +74,7 @@ class SplashScreenState extends State<SplashScreen>{
             )
           ],
         ),
-        ),
+      ),
     );
   }
 

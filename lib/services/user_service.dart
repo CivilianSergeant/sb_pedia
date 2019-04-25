@@ -1,6 +1,7 @@
-import 'package:social_business/entities/user.dart';
-import 'package:social_business/persistance/db_provider.dart';
-import 'package:sqflite/sqlite_api.dart';
+import 'package:sb_pedia/entities/user.dart';
+import 'package:sb_pedia/persistance/db_provider.dart';
+import 'package:sqflite/sqflite.dart';
+
 
 class UserService{
   static Future<void> addUser(User user) async {

@@ -15,6 +15,13 @@ abstract class NetworkService{
     }
   }
 
+  static Future<Map<String,dynamic>> post(String url,Map<String,dynamic> data)
+  async {
+    final response = await http.post(url,body: data);
+    final parsedJson = jsonDecode(response.body);
+    return parsedJson;
+  }
+
   static Future<bool> check() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile) {

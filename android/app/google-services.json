@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "146943797017",
+    "firebase_url": "https://api-project-146943797017.firebaseio.com",
+    "project_id": "api-project-146943797017",
+    "storage_bucket": "api-project-146943797017.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146943797017:android:b758ba2a9fc13da0",
+        "android_client_info": {
+          "package_name": "com.socialbusinesspedia.sb_pedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146943797017-cni06i9un2dbknuomkbkm68fag761cu5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAagemK1OVFMq9VSEbyHyesPeffo1J1RGM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146943797017-cni06i9un2dbknuomkbkm68fag761cu5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

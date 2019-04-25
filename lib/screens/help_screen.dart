@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/widgets/app_bar/app_bar.dart';
-import 'package:social_business/widgets/colors/color_list.dart';
+import 'package:sb_pedia/widgets/app_bar/app_bar.dart';
+import 'package:sb_pedia/widgets/colors/color_list.dart';
 
 class HelpScreen extends StatefulWidget{
 

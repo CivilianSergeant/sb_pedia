@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/entities/event.dart';
-import 'package:social_business/screens/web_view_detail_screen.dart';
+import 'package:sb_pedia/entities/event.dart';
+import 'package:sb_pedia/screens/web_view_detail_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart' as CNI;
-import 'package:social_business/services/network_service.dart';
+import 'package:sb_pedia/services/network_service.dart';
 import 'package:toast/toast.dart';
 
 class EventListItem extends StatelessWidget{

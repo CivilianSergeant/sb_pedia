@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/entities/user.dart';
-import 'package:social_business/services/user_service.dart';
-import 'package:social_business/widgets/colors/color_list.dart';
+import 'package:sb_pedia/entities/user.dart';
+import 'package:sb_pedia/services/user_service.dart';
+import 'package:sb_pedia/widgets/colors/color_list.dart';
 
 class LoginScreen extends StatefulWidget{
 

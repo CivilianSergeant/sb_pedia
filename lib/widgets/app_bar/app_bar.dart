@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/services/network_service.dart';
-import 'package:social_business/services/settings_service.dart';
+import 'package:sb_pedia/services/network_service.dart';
+import 'package:sb_pedia/services/settings_service.dart';
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppTitleBar{
 
   Color backgroundColor;
-  String title;
+  String title="Social Business Pedia";
   PreferredSizeWidget preferredSizeWidget;
   AppTitleBar({Key key,this.title="Social Business Pedia",this.backgroundColor, this.preferredSizeWidget});
   List<PopupMenuOption> options = <PopupMenuOption>[
@@ -20,9 +20,10 @@ class AppTitleBar{
   ];
 
   PreferredSizeWidget build(BuildContext context) {
+
     return AppBar(
       backgroundColor: backgroundColor,
-      title: Text(title),
+      title: (this.title != null )? Text(this.title) : Text(' '),
       centerTitle: true,
       bottom: preferredSizeWidget,
       actions: <Widget>[

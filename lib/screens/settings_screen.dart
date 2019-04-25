@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/entities/setting.dart';
-import 'package:social_business/services/settings_service.dart';
-import 'package:social_business/widgets/app_bar/app_bar.dart';
-import 'package:social_business/widgets/colors/color_list.dart';
-import 'package:social_business/widgets/navigation_drawer/navigation_drawer.dart';
+import 'package:sb_pedia/entities/setting.dart';
+import 'package:sb_pedia/services/settings_service.dart';
+import 'package:sb_pedia/widgets/app_bar/app_bar.dart';
+import 'package:sb_pedia/widgets/colors/color_list.dart';
+import 'package:sb_pedia/widgets/navigation_drawer/navigation_drawer.dart';
 
 class SettingsScreen extends StatefulWidget{
   @override

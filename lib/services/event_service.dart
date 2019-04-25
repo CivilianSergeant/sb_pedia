@@ -1,7 +1,7 @@
-import 'package:social_business/persistance/db_provider.dart';
-import 'package:social_business/services/network_service.dart';
-import 'package:sqflite/sqlite_api.dart';
-import 'package:social_business/entities/event.dart';
+import 'package:sb_pedia/persistance/db_provider.dart';
+import 'package:sb_pedia/services/network_service.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sb_pedia/entities/event.dart';
 import 'dart:async';
 
 class EventService with NetworkService{

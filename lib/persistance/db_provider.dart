@@ -67,6 +67,20 @@ class DbProvider{
           "password VARCHAR(100),"
           "user_type VARCHAR(10)"
           ")");
+        await db.execute("CREATE TABLE faq_categories ("
+          "id INT PRIMARY KEY,"
+          "parent_id INT(11),"
+          "name VARCHAR(300),"
+          "alias VARCHAR(50),"
+          "description TEXT"
+          ")");
+        await db.execute("CREATE TABLE faqs ("
+          "id INT PRIMARY KEY,"
+          "question VARCHAR(500),"
+          "answer TEXT,"
+          "tags VARCHAR(500),"
+          "categories VARCHAR(500)"
+          ")");
     });
   }
 

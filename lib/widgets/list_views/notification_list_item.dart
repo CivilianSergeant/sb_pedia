@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/entities/notification.dart' as SBNotification;
+import 'package:sb_pedia/entities/notification.dart' as SBNotification;
 
 class NotificationListItem extends StatelessWidget{
   SBNotification.Notification notification;

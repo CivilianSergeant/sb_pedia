@@ -1,18 +1,27 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:social_business/entities/news.dart';
-import 'package:social_business/entities/notification.dart' as SBNotification;
-import 'package:social_business/services/news_service.dart';
-import 'package:social_business/services/notification_service.dart';
-import 'package:social_business/widgets/app_bar/app_bar.dart';
-import 'package:social_business/widgets/colors/color_list.dart';
-import 'package:social_business/widgets/grid_view/grid_item.dart';
-import 'package:social_business/widgets/list_views/news_list_item.dart';
-import 'package:social_business/widgets/navigation_drawer/navigation_drawer.dart';
-import 'package:social_business/widgets/icons/my_flutter_icons.dart';
+import 'package:imei_plugin/imei_plugin.dart';
+import 'package:sb_pedia/entities/news.dart';
+import 'package:sb_pedia/entities/notification.dart' as SBNotification;
+import 'package:sb_pedia/screens/web_view_detail_screen.dart';
+import 'package:sb_pedia/services/network_service.dart';
+import 'package:sb_pedia/services/news_service.dart';
+import 'package:sb_pedia/services/notification_service.dart';
+import 'package:sb_pedia/widgets/app_bar/app_bar.dart';
+import 'package:sb_pedia/widgets/colors/color_list.dart';
+import 'package:sb_pedia/widgets/grid_view/grid_item.dart';
+import 'package:sb_pedia/widgets/list_views/news_list_item.dart';
+import 'package:sb_pedia/widgets/navigation_drawer/navigation_drawer.dart';
+import 'package:sb_pedia/widgets/icons/my_flutter_icons.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:device_info/device_info.dart';
+import 'package:toast/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget{
 
@@ -36,6 +45,8 @@ class HomePageWidgetState extends State<HomePageWidget>{
   AppLifecycleState state;
   var androidMessageChannel = MethodChannel("android_app_retain");
   static int backButtonState = 0;
+  int _resumeStateNotification = 0;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   void triggerAction (BuildContext context,String actionName){
 
@@ -69,7 +80,11 @@ class HomePageWidgetState extends State<HomePageWidget>{
         this.news = news;
       });
     });
+  }
 
+  Future<String> getImei() async{
+    var imei = await ImeiPlugin.getImei;
+    return imei;
   }
 
   Widget renderLatestNotification(){
@@ -77,17 +92,17 @@ class HomePageWidgetState extends State<HomePageWidget>{
       return Container();
     }
     return Card(
-        margin: EdgeInsets.only(left: 5,right: 5,top: 5,bottom: 5),
-        child: Container(
-          decoration: BoxDecoration(
-              color: ColorList.greenAccentColor
-          ),
-          child:Padding(
-            padding: EdgeInsets.only(left: 10,right: 10,top: 15,bottom: 15),
-            child: Text(notification.title,
-            style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-          ) ,
-        )
+      margin: EdgeInsets.only(left: 5,right: 5,top: 5,bottom: 5),
+      child: Container(
+        decoration: BoxDecoration(
+            color: ColorList.greenAccentColor
+        ),
+        child:Padding(
+          padding: EdgeInsets.only(left: 10,right: 10,top: 15,bottom: 15),
+          child: Text(notification.title,
+          style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        ) ,
+      )
     );
   }
 
@@ -99,10 +114,131 @@ class HomePageWidgetState extends State<HomePageWidget>{
     return NewsListItem(news: news,);
   }
 
+  void firebaseMessagingListeners() {
+    if (Platform.isIOS) iOSPermission();
+
+    _firebaseMessaging.getToken().then((token) async {
+      final IMEI = await getImei();
+      final registerDeviceData = {
+          'imei' : IMEI,
+          'fcm_token' : token,
+        };
+
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+      if(Platform.isAndroid){
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        registerDeviceData['platform'] = 'android';
+        registerDeviceData['device_id'] = androidInfo.id;
+        registerDeviceData['model'] = androidInfo.model;
+
+      }
+
+      if(Platform.isIOS){
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        registerDeviceData['platform'] = 'iphone';
+        registerDeviceData['device_id'] = iosInfo.identifierForVendor;
+        registerDeviceData['model'] = iosInfo.utsname.machine;
+      }
+
+      if(token.isNotEmpty){
+        print(jsonEncode(registerDeviceData));
+        String url = "http://sbes.socialbusinesspedia.com/api/sb_security/fcm";
+        NetworkService.post(url, registerDeviceData).then((Map<String,dynamic> res){
+          if(res['status']==200){
+            // handle
+          }
+        });
+      }
+
+    });
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        //print(message['notification']);
+        var _androidInitSettings = AndroidInitializationSettings('notification');
+        var _iosInitSettings = IOSInitializationSettings();
+        var _initializationSettings = InitializationSettings(_androidInitSettings,
+        _iosInitSettings);
+        final _flutterLocalNotification = FlutterLocalNotificationsPlugin();
+        _flutterLocalNotification.initialize(_initializationSettings,
+        onSelectNotification: this.launchScreen);
+        var _androidPlatformChannelSpecifics = AndroidNotificationDetails(
+          'sb_pedia_local_notification',
+          'sb_pedia_local_notification',
+          'this will be sb_pedia local notification',
+          playSound: true
+        );
+        var _iosPlatformChannelSpecifics =  IOSNotificationDetails();
+        var _platformSpecifics = NotificationDetails(_androidPlatformChannelSpecifics,
+        _iosPlatformChannelSpecifics);
+        await _flutterLocalNotification.show(0, message['notification']['title'],message['notification']['body'],
+        _platformSpecifics,payload: json.encode(message));
+
+      },
+      onResume: (Map<String, dynamic> message) async {
+        if(_resumeStateNotification>0){
+          return;
+        }
+        Future.delayed(Duration(milliseconds: 200),(){
+          this.launchScreen(json.encode(message));
+          backButtonState = 1;
+          _resumeStateNotification  = 1;
+        });
+
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        if(backButtonState>0){
+          return;
+        }
+        Future.delayed(Duration(milliseconds: 200),(){
+          this.launchScreen(json.encode(message));
+          backButtonState = 1;
+          _resumeStateNotification = 0;
+        });
+
+      },
+    );
+  }
+
+  Future launchScreen(String s) async{
+
+    Map<String, dynamic> message = json.decode(s);
+    print(s);
+    if(message['data']['type'] == 'other'){
+      await launch(message['data']['content_url']);
+    }else{
+      if(message['data']['content_url'] == null){
+        Navigator.pushReplacementNamed(context, '/'+message['data']['screen']);
+      }else{
+        Navigator.push(context, MaterialPageRoute(
+            builder: (context) => WebViewDetailScreen(
+              title:message['data']['content_title'],
+              url:message['data']['content_url'])
+        ));
+      }
+    }
+
+  }
+
+  void iOSPermission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true)
+    );
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings)
+    {
+      print("Settings registered: $settings");
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     loadData();
+
+    firebaseMessagingListeners();
+
   }
 
   Future<bool> _exitApp(BuildContext context) {

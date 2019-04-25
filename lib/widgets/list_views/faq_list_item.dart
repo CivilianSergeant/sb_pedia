@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:sb_pedia/entities/faq.dart';
 
 class FaqListItem extends StatelessWidget{
 
-  String text;
+  Faq faq;
   Function callback;
 
-  FaqListItem({Key key, this.text, this.callback});
+  FaqListItem({Key key, this.faq, this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +16,13 @@ class FaqListItem extends StatelessWidget{
         highlightColor: Colors.black12,
         onTap: (){
           if(callback != null){
-            callback();
+            callback(faq);
           }
         },
         child: Container(
           child:Padding(
               padding: EdgeInsets.fromLTRB(10,10,10,10),
-              child:Text(text) ,
+              child:Text(faq.question) ,
             ),
           ),
         ),

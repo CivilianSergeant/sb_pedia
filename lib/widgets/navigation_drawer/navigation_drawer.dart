@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/widgets/navigation_drawer/list_item.dart';
-import 'package:social_business/widgets/icons/my_flutter_icons.dart';
-import 'package:social_business/widgets/navigation_drawer/nav_drawer_header.dart';
+import 'package:sb_pedia/widgets/navigation_drawer/list_item.dart';
+import 'package:sb_pedia/widgets/icons/my_flutter_icons.dart';
+import 'package:sb_pedia/widgets/navigation_drawer/nav_drawer_header.dart';
 
 const String IMAGE_URL = "images/avatar.png";
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/screens/faq/tabs/tab_one.dart';
-import 'package:social_business/screens/faq/tabs/tab_two.dart';
-import 'package:social_business/widgets/app_bar/app_bar.dart';
-import 'package:social_business/widgets/colors/color_list.dart';
-import 'package:social_business/widgets/navigation_drawer/navigation_drawer.dart';
+import 'package:sb_pedia/screens/faq/tabs/tab_one.dart';
+import 'package:sb_pedia/screens/faq/tabs/tab_two.dart';
+import 'package:sb_pedia/widgets/app_bar/app_bar.dart';
+import 'package:sb_pedia/widgets/colors/color_list.dart';
+import 'package:sb_pedia/widgets/navigation_drawer/navigation_drawer.dart';
 
 class FaqScreen extends StatefulWidget{
 

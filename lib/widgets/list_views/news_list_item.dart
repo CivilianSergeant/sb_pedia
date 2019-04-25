@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/entities/news.dart';
-import 'package:social_business/screens/web_view_detail_screen.dart';
+import 'package:sb_pedia/entities/news.dart';
+import 'package:sb_pedia/screens/web_view_detail_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart' as CNI;
-import 'package:social_business/services/network_service.dart';
+import 'package:sb_pedia/services/network_service.dart';
 import 'package:toast/toast.dart';
 class NewsListItem extends StatelessWidget{
 
@@ -12,8 +12,8 @@ class NewsListItem extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    final title = (news.title.length> 115)? news.title.substring(0,115)+'...' : news.title;
-    final description = (news.description.length> 70)? news.description.substring(0,70)+'...' : news.description;
+    final title = (news != null)? ((news.title.length> 115)? news.title.substring(0,115)+'...' : news.title) : 'Loading...';
+    final description = (news != null) ? ((news.description.length> 70)? news.description.substring(0,70)+'...' : news.description) : 'Loading...';
     return Card(
       child: InkWell(
         onTap: (){

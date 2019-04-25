@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:social_business/screens/faq/faq_screen.dart';
-import 'package:social_business/screens/help_screen.dart';
-import 'package:social_business/screens/news/news_screen.dart';
-import 'package:social_business/screens/notification/notification_screen.dart';
-import 'package:social_business/screens/settings_screen.dart';
-import 'package:social_business/screens/splash_screen.dart';
-import 'package:social_business/screens/event/event_screen.dart';
-import 'package:social_business/screens/home_screen.dart';
-import 'package:social_business/screens/login_screen.dart';
-import 'package:social_business/widgets/colors/color_list.dart';
+import 'package:flutter/services.dart';
+import 'package:sb_pedia/screens/faq/faq_screen.dart';
+import 'package:sb_pedia/screens/help_screen.dart';
+import 'package:sb_pedia/screens/news/news_screen.dart';
+import 'package:sb_pedia/screens/notification/notification_screen.dart';
+import 'package:sb_pedia/screens/settings_screen.dart';
+import 'package:sb_pedia/screens/splash_screen.dart';
+import 'package:sb_pedia/screens/event/event_screen.dart';
+import 'package:sb_pedia/screens/home_screen.dart';
+import 'package:sb_pedia/screens/login_screen.dart';
+import 'package:sb_pedia/widgets/colors/color_list.dart';
 
-void main() => runApp(MyApp());
+void main() =>  SystemChrome
+    .setPreferredOrientations([DeviceOrientation.portraitUp])
+    .then((_) {runApp(MyApp());
+    });
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
