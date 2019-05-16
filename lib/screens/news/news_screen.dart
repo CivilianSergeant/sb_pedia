@@ -54,7 +54,7 @@ class _NewsScreenState extends State<NewsScreen>{
           key: _refreshIndicatorKey,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.black12
+              color: ColorList.home
             ),
             child:ListView.builder(
 

@@ -16,10 +16,14 @@ class UserService{
       Map<String, dynamic> user = maps.first;
 
       return User(
-          id: user['id'],
-          username: user['username'],
-          password: user['password'],
-          userType: user['user_type']
+        id: user['id'],
+        username: user['username'],
+        password: user['password'],
+        userType: user['user_type'],
+        email: user['email'],
+        firstName: user['first_name'],
+        lastName: user['last_name'],
+        profileImage: user['profile_image']
       );
     }else{
       return User();

@@ -49,7 +49,7 @@ class SplashScreenState extends State<SplashScreen>{
       body:  Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: ColorList.greenAccentColor,
+            color: ColorList.deepBlueGreenSplash,
             image: new DecorationImage(
               image: new AssetImage("images/background.jpg"),
               fit: BoxFit.cover,

@@ -29,12 +29,12 @@ class _FaqScreenState extends State<FaqScreen>{
   @override
   Widget build(BuildContext context) {
     final appTitleBar = AppTitleBar(title:"Social Business Q & A",backgroundColor: ColorList.greenColor,
-      preferredSizeWidget: TabBar(
-        tabs: <Widget>[
-          Tab( text: "FAQ",),
-          Tab( text: "Inquiry",)
-        ],
-      )
+//      preferredSizeWidget: TabBar(
+//        tabs: <Widget>[
+//          Tab( text: "FAQ",),
+//          Tab( text: "Inquiry",)
+//        ],
+//      ),
     );
     return WillPopScope(
       onWillPop: (){
@@ -43,13 +43,44 @@ class _FaqScreenState extends State<FaqScreen>{
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
-
           drawer: NavigationDrawer(color:ColorList.greenColor,accentColor:ColorList.greenAccentColor,),
           appBar: appTitleBar.build(context),
-          body: TabBarView(
+          body: Column(
             children: <Widget>[
-              TabOne(),
-              TabTwo()
+              Container(
+                constraints: BoxConstraints(maxHeight: 150.0),
+                child: Material(
+                  color: ColorList.greenAccentColor,
+                  child:TabBar(
+                    indicatorColor: ColorList.deepBlueGreen,
+                    tabs: <Widget>[
+                      Container(
+                        margin: EdgeInsets.all(0),
+                        padding: EdgeInsets.all(0),
+                        width: double.infinity,
+//                        color: Colors.red,
+                        child: Tab( text: "FAQ",),
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(0),
+                        padding: EdgeInsets.all(0),
+                        width: double.infinity,
+//                        color:Colors.blue,
+                        child: Tab( text: "Inquiry",),
+                      )
+
+                    ],
+                  ) ,
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: <Widget>[
+                    TabOne(),
+                    TabTwo()
+                  ],
+                ),
+              )
             ],
           ),
         ),

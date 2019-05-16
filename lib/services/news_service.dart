@@ -33,7 +33,7 @@ class NewsService with NetworkService{
 
   static Future<News> getLatestNews() async {
     final Database db = await DbProvider.db.database;
-    final List<Map<String, dynamic>> maps = await db.query(News.table,orderBy: "publish_date desc");
+    final List<Map<String, dynamic>> maps = await db.query(News.table,where: 'is_top_news=?', whereArgs: [1], orderBy: "publish_date desc");
     return News.fromMap(maps.first);
   }
 

@@ -25,24 +25,36 @@ class _FaqDetailScreenState extends State<FaqDetailScreen>{
     return Scaffold(
       appBar: appTitleBar.build(context),
       body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(5),
-              child: Text(widget.faq.question,style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20
-              ),),
-            ),
-            Padding(
-              padding: EdgeInsets.all(5),
-              child:HtmlTextView(
-                data: widget.faq.answer
+        decoration: BoxDecoration(
+          color: ColorList.home
+        ),
+        child: Card(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(5),
+                child: Text(widget.faq.question,style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20
+                ),),
               ),
-            )
-          ],
+              Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child:HtmlTextView(
+                          data: widget.faq.answer
+                      ),
+                    )
+                  ],
+                ),
+              )
+
+            ],
+          ),
         ),
       ),
     );

@@ -33,6 +33,23 @@ class FaqService extends NetworkService{
     });
   }
 
+  static Future<List<Faq>> getFaqsWhereIdIn(List ids) async {
+    final Database db = await DbProvider.db.database;
+    List<Map<String, dynamic>> _maps;
+    String whereIds = "("+ids.join(",")+")";
+    _maps = await db.rawQuery("SELECT * FROM ${Faq.table} WHERE id IN ${whereIds}");
+
+    return List.generate(_maps.length, (i){
+      return Faq(
+        id: _maps[i]['id'],
+        question: _maps[i]['question'],
+        answer: _maps[i]['answer'],
+        tags: _maps[i]['tags'],
+        categories: _maps[i]['categories']
+      );
+    });
+  }
+
   @override
   T extractFromJson<T>(Map<String, dynamic> parsedJson) {
     try{

@@ -13,21 +13,33 @@ class GridItem extends StatelessWidget{
   Widget build(BuildContext context) {
     return GridTile(
       child:  Card(
-        elevation:2,
-        child: InkWell(
-          onTap: (){
-            if(callback != null){
-              callback(context,name);
-            }
-          },
-          child: Center(
+        margin: EdgeInsets.all(10),
+        elevation:0,
+
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            color: Colors.white,
+                boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 7 )]
+            ),
+          child: InkWell(
+            highlightColor: Colors.white,
+            onTap: (){
+              if(callback != null){
+                callback(context,name);
+              }
+            },
             child: Padding(
               padding: EdgeInsets.only(top:10),
               child:Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(icon,size: 60,color: color,),
-                  Padding(padding: EdgeInsets.only(top:10),child:Text(text,style: TextStyle(color: color,fontWeight: FontWeight.bold),))
+                  Icon(icon,size: 70,color: color,),
+                  Padding(padding: EdgeInsets.only(top:10),
+                      child:Text(text,
+                        style: TextStyle(color: Colors.black87,
+                            fontWeight: FontWeight.normal),))
                 ],
               ),
             ),

@@ -48,7 +48,7 @@ class DbProvider{
           "content_url Text"
           ")");
         await db.execute("CREATE TABLE notifications ("
-          "id INT PRIMARY KEY,"
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
           "title TEXT,"
           "message TEXT,"
           "is_top TINYINT(1),"
@@ -59,12 +59,18 @@ class DbProvider{
         await db.execute("CREATE TABLE settings ("
           "id INT PRIMARY KEY,"
           "title VARCHAR(50),"
+          "description VARCHAR(150),"
+          "alias VARCHAR(10),"
           "status TINYINT(1)"
           ")");
         await db.execute("CREATE TABLE users ("
-          "id INT PRIMARY KEY,"
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
           "username VARCHAR(100),"
           "password VARCHAR(100),"
+          "email VARCHAR(500),"
+          "first_name VARCHAR(255),"
+          "last_name VARCHAR(255),"
+          "profile_image TEXT,"
           "user_type VARCHAR(10)"
           ")");
         await db.execute("CREATE TABLE faq_categories ("
@@ -72,7 +78,8 @@ class DbProvider{
           "parent_id INT(11),"
           "name VARCHAR(300),"
           "alias VARCHAR(50),"
-          "description TEXT"
+          "description TEXT,"
+          "total_faq INT(11)"
           ")");
         await db.execute("CREATE TABLE faqs ("
           "id INT PRIMARY KEY,"

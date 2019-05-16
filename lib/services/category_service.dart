@@ -22,7 +22,8 @@ class CategoryService with NetworkService{
         parentId: maps[i]['parent_id'],
         name: maps[i]['name'],
         alias: maps[i]['alias'],
-        description: maps[i]['description']
+        description: maps[i]['description'],
+        totalFaq: maps[i]['total_faq']
       );
     });
   }

@@ -2,13 +2,15 @@ class Notification{
 
   static const table = "notifications";
 
-  final int id;
+  int id;
   final int isTop;
   final String title;
   final String message;
   final String url;
   final String imageUrl;
   final String sentDate;
+
+  set ID (int _id)=> id = _id;
 
   Notification({this.id,this.isTop,this.title,this.message,this.url,this.imageUrl,this.sentDate});
 
@@ -27,7 +29,7 @@ class Notification{
   factory Notification.fromMap(Map<String,dynamic> map){
     return Notification(
         id : map['id'],
-        isTop: map['is_top'],
+        isTop: int.parse(map['is_top'].toString()),
         title: map['title'],
         message: map['message'],
         url : map['url'],

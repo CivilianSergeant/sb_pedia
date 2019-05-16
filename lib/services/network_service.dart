@@ -18,7 +18,7 @@ abstract class NetworkService{
   static Future<Map<String,dynamic>> post(String url,Map<String,dynamic> data)
   async {
     final response = await http.post(url,body: data);
-    final parsedJson = jsonDecode(response.body);
+    final parsedJson = (response.body != null)? jsonDecode(response.body) : null;
     return parsedJson;
   }
 

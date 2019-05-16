@@ -3,20 +3,23 @@ import 'package:sb_pedia/widgets/navigation_drawer/list_item.dart';
 import 'package:sb_pedia/widgets/icons/my_flutter_icons.dart';
 import 'package:sb_pedia/widgets/navigation_drawer/nav_drawer_header.dart';
 
-const String IMAGE_URL = "images/avatar.png";
-
 class NavigationDrawer extends StatelessWidget{
-
-
 
   Color color;
   Color accentColor;
-  String imagePath;
-  NavigationDrawer({this.color,this.accentColor,this.imagePath=IMAGE_URL});
+
+  NavigationDrawer({this.color,this.accentColor,});
 
   void triggerAction(BuildContext context, String actionName){
     Navigator.popUntil(context, (route){
       switch(actionName){
+        case "home":
+          if(route.settings.name != "/home"){
+            Navigator.pushReplacementNamed(context, '/home');
+          }else{
+            Navigator.pop(context);
+          }
+          break;
         case "events":
           if(route.settings.name != "/events"){
             Navigator.pushReplacementNamed(context,'/events');
@@ -52,23 +55,24 @@ class NavigationDrawer extends StatelessWidget{
             Navigator.pop(context);
           }
           break;
-
       }
       return true;
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+
     return Drawer(
       child: new Container(
         color:accentColor,
         child: new Column(
           children: <Widget>[
             SizedBox(
-                  height:225,
-                  child: NavDrawerHeader(color: accentColor,
-                    imagePath: imagePath,)
+              height:225,
+              child: NavDrawerHeader(color: accentColor,)
             ),
             Expanded(
               child: Material(
@@ -76,34 +80,13 @@ class NavigationDrawer extends StatelessWidget{
                 child: ListView(
                   padding: EdgeInsets.all(0),
                   children: <Widget>[
-//                    ListItem( name: 'acount-info',
-//                        icon: Icons.info,
-//                        iconColor: accentColor,
-//                        text: "Account Information",
-//                        textColor: accentColor),
-//                    ListItem(icon: Icons.lock,
-//                        iconColor: accentColor,
-//                        text: "Forget Password",
-//                        textColor: accentColor),
-
-//                    Padding(padding:EdgeInsets.only(left: 20,top:4),
-//                      child:Text("All Modules",
-//                      style: TextStyle(color: accentColor)
-//                      )
-//                    ),
-
-//                    ListItem(icon: MyFlutter.chart_line,
-//                        iconColor: accentColor,text: "SB Design Lab",
-//                        textColor: accentColor),
-//                    ListItem(icon: Icons.public,
-//                        iconColor: accentColor,
-//                        text: "SB World",
-//                        textColor: accentColor),
-//                    ListItem(icon: Icons.school,
-//                        iconColor: accentColor,
-//                        text: "SB Academia",
-//                        textColor: accentColor),
-
+                    ListItem(
+                        name:'home',
+                        callback:this.triggerAction,
+                        icon: Icons.home,
+                        iconColor: accentColor,
+                        text: "Home",
+                        textColor: accentColor),
                     ListItem(
                         name:'news',
                         callback:this.triggerAction,

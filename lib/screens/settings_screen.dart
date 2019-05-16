@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:sb_pedia/entities/setting.dart';
+import 'package:sb_pedia/services/network_service.dart';
 import 'package:sb_pedia/services/settings_service.dart';
 import 'package:sb_pedia/widgets/app_bar/app_bar.dart';
 import 'package:sb_pedia/widgets/colors/color_list.dart';
 import 'package:sb_pedia/widgets/navigation_drawer/navigation_drawer.dart';
+import 'package:toast/toast.dart';
 
 class SettingsScreen extends StatefulWidget{
   @override
@@ -48,20 +52,47 @@ class _SettingsScreenState extends State<SettingsScreen>{
     });
   }
 
+
+
   Widget renderItems(BuildContext context, int i){
     if(settings != null) {
       Setting setting = settings[i];
-      print(setting.status);
+
       return Column(
         children: <Widget>[
           SwitchListTile(
 
             title: Text(setting.title),
+            subtitle: Text(setting.description),
             value: setting.status,
             onChanged: (value){
               setState(() {
                 setting.status = value;
-                SettingsService.updateSetting(setting);
+                SettingsService.updateSetting(setting).then((int value)  {
+                    SettingsService.getSettings().then((List<Setting> _settings) async {
+                      List latestSetting = List<String>();
+
+                      _settings.forEach((Setting _setting){
+                        if(_setting.status)
+                          latestSetting.add(_setting.alias);
+                      });
+
+                      String settingStr = "["+latestSetting.join(",")+"]";
+
+                      print(settingStr);
+                      String url = "http://sbes.socialbusinesspedia.com/api/sb_security/setting";
+                      NetworkService.post(url, {
+                        'imei': await SettingsService.getImei(),
+                        'setting': settingStr
+                      }).then((Map<String,dynamic> res){
+
+                        if(res['status']==200){
+                          Toast.show("Setting successfully updated", context,
+                              gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+                        }
+                      });
+                    });
+                });
               });
             },
           ),

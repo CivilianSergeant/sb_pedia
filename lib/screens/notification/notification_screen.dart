@@ -53,25 +53,25 @@ class _NotificationScreenState extends State<NotificationScreen>{
         body: RefreshIndicator(
           key: _refreshIndicatorState,
           child: Container(
-            color:Colors.black12,
+            color:ColorList.home,
             child: ListView.builder(
               itemCount: itemCount,
               itemBuilder: renderItems
             ),
           ),
           onRefresh: () async {
-            if(onLoadFlag == false){
-              onLoadFlag = true;
-            }else{
-              String url = "http://sbes.socialbusinesspedia.com/api/sb_contents/content/notification";
-              final parsedJson = await NetworkService.fetch(url);
-              List<SBNotification.Notification> newNotifications = NotificationService().extractFromJson(parsedJson);
-              if(newNotifications != null){
-                newNotifications.forEach((SBNotification.Notification n){
-                  NotificationService.addNotification(n);
-                });
-              }
-            }
+//            if(onLoadFlag == false){
+//              onLoadFlag = true;
+//            }else{
+//              String url = "http://sbes.socialbusinesspedia.com/api/sb_contents/content/notification";
+//              final parsedJson = await NetworkService.fetch(url);
+//              List<SBNotification.Notification> newNotifications = NotificationService().extractFromJson(parsedJson);
+//              if(newNotifications != null){
+//                newNotifications.forEach((SBNotification.Notification n){
+//                  NotificationService.addNotification(n);
+//                });
+//              }
+//            }
             return NotificationService.getNotifications().then((dynamic lists) {
               if(lists != null){
                 setState(() {

@@ -1,3 +1,4 @@
+import 'package:imei_plugin/imei_plugin.dart';
 import 'package:sb_pedia/entities/category.dart';
 import 'package:sb_pedia/entities/event.dart';
 import 'package:sb_pedia/entities/faq.dart';
@@ -9,7 +10,6 @@ import 'package:sb_pedia/services/category_service.dart';
 import 'package:sb_pedia/services/event_service.dart';
 import 'package:sb_pedia/services/faq_service.dart';
 import 'package:sb_pedia/services/news_service.dart';
-import 'package:sb_pedia/services/notification_service.dart';
 import 'package:sqflite/sqflite.dart';
 
 
@@ -32,6 +32,8 @@ class SettingsService{
       return Setting(
         id: maps[i]['id'],
         title: maps[i]['title'],
+        description: maps[i]['description'],
+        alias:maps[i]['alias'],
         status: (maps[i]['status']>0)? true : false
       );
     });
@@ -48,14 +50,6 @@ class SettingsService{
     List<News> allNews = NewsService().extractFromJson<List<News>>(parsedJson);
     if(allNews != null){
       allNews.forEach((News news) => NewsService.addNews(news));
-    }
-
-    // Get Notification Data
-    List<Notification> allNotifications = NotificationService()
-        .extractFromJson<List<Notification>>(parsedJson);
-    if(allNotifications != null){
-      allNotifications.forEach((Notification notification) =>
-          NotificationService.addNotification(notification));
     }
 
     // Get Categories Data
@@ -78,8 +72,30 @@ class SettingsService{
 
   }
 
+  static Future<String> getImei() async{
+    var imei = await ImeiPlugin.getImei;
+    return imei;
+  }
+
   static void loadInitialSettings(){
-    SettingsService.addSetting(Setting(id: 1,status: true,title: "Event Notification"));
-    SettingsService.addSetting(Setting(id: 2,status: true,title: "News Notification"));
+    SettingsService.addSetting(Setting(id: 1,status: true,title: "SB News",
+    description: "what are going on the world about Social Business , you will get  those News  notification If you check on this",
+    alias: 'news'));
+
+    SettingsService.addSetting(Setting(id: 2,status: true,title: "SB Event",
+    description: "SB event such SBD, GSBS, SBAC  notification will send to you if you check on this.",
+    alias: 'event'));
+
+    SettingsService.addSetting(Setting(id: 3,status: true,title: "SBAC",
+    description: "Notification regarding Social Business Academia Conference",
+    alias: 'sbac'));
+
+    SettingsService.addSetting(Setting(id: 4, status: true, title: "YSBC",
+    description: "Notification regarding Yunus Social Business Centre",
+    alias: 'ysbc'));
+    
+    SettingsService.addSetting(Setting(id:5, status: true, title: "General",
+    description: "General Notification regarding Social Business",
+    alias: 'general'));
   }
 }

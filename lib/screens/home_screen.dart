@@ -8,10 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:imei_plugin/imei_plugin.dart';
 import 'package:sb_pedia/entities/news.dart';
 import 'package:sb_pedia/entities/notification.dart' as SBNotification;
+import 'package:sb_pedia/entities/user.dart';
 import 'package:sb_pedia/screens/web_view_detail_screen.dart';
 import 'package:sb_pedia/services/network_service.dart';
 import 'package:sb_pedia/services/news_service.dart';
 import 'package:sb_pedia/services/notification_service.dart';
+import 'package:sb_pedia/services/user_service.dart';
 import 'package:sb_pedia/widgets/app_bar/app_bar.dart';
 import 'package:sb_pedia/widgets/colors/color_list.dart';
 import 'package:sb_pedia/widgets/grid_view/grid_item.dart';
@@ -42,6 +44,7 @@ class HomePageWidgetState extends State<HomePageWidget>{
 
   SBNotification.Notification notification;
   News news;
+
   AppLifecycleState state;
   var androidMessageChannel = MethodChannel("android_app_retain");
   static int backButtonState = 0;
@@ -80,6 +83,7 @@ class HomePageWidgetState extends State<HomePageWidget>{
         this.news = news;
       });
     });
+
   }
 
   Future<String> getImei() async{
@@ -92,17 +96,48 @@ class HomePageWidgetState extends State<HomePageWidget>{
       return Container();
     }
     return Card(
-      margin: EdgeInsets.only(left: 5,right: 5,top: 5,bottom: 5),
-      child: Container(
-        decoration: BoxDecoration(
-            color: ColorList.greenAccentColor
+      margin: EdgeInsets.only(left: 8,right: 8,top: 10,bottom: 10),
+      child: InkWell(
+        onTap: (){
+
+          if(notification.url != null) {
+            NetworkService.check().then((bool network) {
+              if (network) {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => WebViewDetailScreen(
+                      title: notification.title,
+                      url: notification.url,)
+                ));
+              } else {
+                Toast.show("Internet not available", context,
+                    gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+              }
+            });
+          }
+        },
+        child: Container(
+          
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              color: ColorList.deepBlueGreen
+          ),
+          child:Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 10,right: 10,top: 8,bottom: 2),
+                child: Text(notification.title ?? "Loading",
+                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10,right: 10,top: 2,bottom: 15),
+                child: Text(notification.message ?? "Loading",
+                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.normal),),
+              )
+            ],
+          ),
         ),
-        child:Padding(
-          padding: EdgeInsets.only(left: 10,right: 10,top: 15,bottom: 15),
-          child: Text(notification.title,
-          style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-        ) ,
-      )
+      ),
     );
   }
 
@@ -123,7 +158,7 @@ class HomePageWidgetState extends State<HomePageWidget>{
           'imei' : IMEI,
           'fcm_token' : token,
         };
-
+//      print(token);
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
       if(Platform.isAndroid){
@@ -131,7 +166,6 @@ class HomePageWidgetState extends State<HomePageWidget>{
         registerDeviceData['platform'] = 'android';
         registerDeviceData['device_id'] = androidInfo.id;
         registerDeviceData['model'] = androidInfo.model;
-
       }
 
       if(Platform.isIOS){
@@ -142,7 +176,7 @@ class HomePageWidgetState extends State<HomePageWidget>{
       }
 
       if(token.isNotEmpty){
-        print(jsonEncode(registerDeviceData));
+        //print(jsonEncode(registerDeviceData));
         String url = "http://sbes.socialbusinesspedia.com/api/sb_security/fcm";
         NetworkService.post(url, registerDeviceData).then((Map<String,dynamic> res){
           if(res['status']==200){
@@ -155,25 +189,9 @@ class HomePageWidgetState extends State<HomePageWidget>{
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        //print(message['notification']);
-        var _androidInitSettings = AndroidInitializationSettings('notification');
-        var _iosInitSettings = IOSInitializationSettings();
-        var _initializationSettings = InitializationSettings(_androidInitSettings,
-        _iosInitSettings);
-        final _flutterLocalNotification = FlutterLocalNotificationsPlugin();
-        _flutterLocalNotification.initialize(_initializationSettings,
-        onSelectNotification: this.launchScreen);
-        var _androidPlatformChannelSpecifics = AndroidNotificationDetails(
-          'sb_pedia_local_notification',
-          'sb_pedia_local_notification',
-          'this will be sb_pedia local notification',
-          playSound: true
-        );
-        var _iosPlatformChannelSpecifics =  IOSNotificationDetails();
-        var _platformSpecifics = NotificationDetails(_androidPlatformChannelSpecifics,
-        _iosPlatformChannelSpecifics);
-        await _flutterLocalNotification.show(0, message['notification']['title'],message['notification']['body'],
-        _platformSpecifics,payload: json.encode(message));
+        NotificationService.raiseLocalNotification(message, this.launchScreen).then((_){
+          loadData();
+        });
 
       },
       onResume: (Map<String, dynamic> message) async {
@@ -181,20 +199,37 @@ class HomePageWidgetState extends State<HomePageWidget>{
           return;
         }
         Future.delayed(Duration(milliseconds: 200),(){
+          NotificationService.addNotification(SBNotification.Notification.fromMap({
+            'is_top': message['data']['is_top'],
+            'title' : message['data']['title'],
+            'message' : message['data']['body'],
+            'url' : message['data']['content_url']
+          }),welcome: false);
           this.launchScreen(json.encode(message));
-          backButtonState = 1;
-          _resumeStateNotification  = 1;
+          setState(() {
+            loadData();
+            backButtonState = 1;
+            _resumeStateNotification  = 1;
+          });
         });
-
       },
       onLaunch: (Map<String, dynamic> message) async {
         if(backButtonState>0){
           return;
         }
         Future.delayed(Duration(milliseconds: 200),(){
+          NotificationService.addNotification(SBNotification.Notification.fromMap({
+            'is_top': message['data']['is_top'],
+            'title' : message['data']['title'],
+            'message' : message['data']['body'],
+            'url' : message['data']['content_url']
+          }),welcome: false);
           this.launchScreen(json.encode(message));
-          backButtonState = 1;
-          _resumeStateNotification = 0;
+          setState(() {
+            loadData();
+            backButtonState = 1;
+            _resumeStateNotification = 0;
+          });
         });
 
       },
@@ -204,21 +239,22 @@ class HomePageWidgetState extends State<HomePageWidget>{
   Future launchScreen(String s) async{
 
     Map<String, dynamic> message = json.decode(s);
-    print(s);
-    if(message['data']['type'] == 'other'){
-      await launch(message['data']['content_url']);
-    }else{
+
+
+    if(message['data']['type'] == 'news' || message['data']['type'] == 'events'
+    || message['data']['type'] == 'notifications'){
       if(message['data']['content_url'] == null){
         Navigator.pushReplacementNamed(context, '/'+message['data']['screen']);
       }else{
         Navigator.push(context, MaterialPageRoute(
             builder: (context) => WebViewDetailScreen(
-              title:message['data']['content_title'],
-              url:message['data']['content_url'])
+                title:message['data']['content_title'],
+                url:message['data']['content_url'])
         ));
       }
+    }else{ // for others
+      await launch(message['data']['content_url']);
     }
-
   }
 
   void iOSPermission() {
@@ -285,10 +321,10 @@ class HomePageWidgetState extends State<HomePageWidget>{
       child: Scaffold(
         key: Key("home"),
         appBar: appTitleBar.build(context),
-        drawer: NavigationDrawer(color: ColorList.greenColor,accentColor: ColorList.greenAccentColor,imagePath: IMAGE_URL,),
+        drawer: NavigationDrawer(color: ColorList.greenColor,accentColor: ColorList.greenAccentColor),
         body: Container(
           decoration: BoxDecoration(
-            color: Colors.black12
+            color: ColorList.home
           ),
           child: ListView(
             shrinkWrap: true,
@@ -296,14 +332,17 @@ class HomePageWidgetState extends State<HomePageWidget>{
               renderLatestNotification(),
               renderLatestNews(),
               GridView.count(
+
                 shrinkWrap: true,
                 primary: true,
                 crossAxisCount: 2,
                 physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.all(2),
+
                   children: <Widget>[
 
-                    GridItem(callback:this.triggerAction, name: 'news', color: ColorList.greenAccentColor, text:"SB News", icon:MyFlutter.newspaper),
+                    GridItem(callback:this.triggerAction,
+                        name: 'news', color: ColorList.greenAccentColor,
+                        text:"SB News", icon:MyFlutter.newspaper),
                     GridItem(callback:this.triggerAction, color: ColorList.greenAccentColor, name: 'notifications', text:"Notifications", icon: Icons.notifications,),
                     GridItem(callback:this.triggerAction, color: ColorList.greenAccentColor, name: 'faqs', text:"SB Q&A", icon: Icons.help_outline,),
                     GridItem(callback:this.triggerAction, name: 'events',color: ColorList.greenAccentColor, text:"SB Event", icon: MyFlutter.calendar,),
@@ -320,7 +359,7 @@ class HomePageWidgetState extends State<HomePageWidget>{
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: Text("Content Provider: socialbusinesspedia.com",
-                    style: TextStyle(fontWeight: FontWeight.bold
+                    style: TextStyle(fontWeight: FontWeight.normal
                     ),
                   ),
                 ),

@@ -55,7 +55,6 @@ class EventListState extends State<EventList>{
 
     return WillPopScope(
       onWillPop: (){
-
         Navigator.pushReplacementNamed(context, "/home");
       },
       child: Scaffold(
@@ -65,7 +64,7 @@ class EventListState extends State<EventList>{
           key: _refreshIndicatorKey,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white
+              color: ColorList.home
             ),
             child: ListView.builder(
               itemCount: itemCount,

@@ -7,8 +7,10 @@ class Category{
   final String name;
   final String alias;
   final String description;
+  final int totalFaq;
 
-  Category({this.id,this.parentId,this.name,this.alias,this.description});
+  Category({this.id,this.parentId,this.name,this.alias,this.description,
+  this.totalFaq});
 
   factory Category.fromJson(Map<String, dynamic> json){
     return Category(
@@ -16,7 +18,8 @@ class Category{
       parentId: int.parse(json['parent_id']),
       name: json['name'],
       alias: json['alias'],
-      description: json['description']
+      description: json['description'],
+      totalFaq: json['total_faq']
     );
   }
 
@@ -26,7 +29,8 @@ class Category{
       'parent_id' : parentId,
       'name' : name,
       'alias' : alias,
-      'description' : description
+      'description' : description,
+      'total_faq' : totalFaq
     };
   }
 }

@@ -4,6 +4,7 @@ import 'package:sb_pedia/entities/faq.dart';
 import 'package:sb_pedia/screens/faq/faq_detail_screen.dart';
 import 'package:sb_pedia/services/category_service.dart';
 import 'package:sb_pedia/services/faq_service.dart';
+import 'package:sb_pedia/widgets/colors/color_list.dart';
 import 'package:sb_pedia/widgets/list_views/faq_list_item.dart';
 class TabOne extends StatefulWidget{
 
@@ -35,7 +36,7 @@ class _TabOneState extends State<TabOne>{
           //setState(() {
             _dropDownMenuItems.add(DropdownMenuItem(
                 value: category.id.toString(),
-                child: new Text(category.name)
+                child: new Text(category.name + " (" + category.totalFaq.toString() + ")")
             ));
 
 //          });
@@ -80,7 +81,7 @@ class _TabOneState extends State<TabOne>{
   Widget build(BuildContext context){
     return
       Container(
-
+        color: ColorList.home,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children:<Widget>[
